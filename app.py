@@ -179,5 +179,22 @@ if st.session_state['data_mapped'] is not None:
                     else:
                         e_p.markdown(full_resp.replace("[ENGLISH]", "").strip() + " ▌")
             st.balloons()
+            # Step 1: Save the finished story to session state for the download button
+            st.session_state['last_story_output'] = full_resp
 else:
     st.info("👈 Please upload a scientific CSV file and click 'Interpret' to begin.")
+
+# --- 7. EXPORT SECTION ---
+# This only appears if a story has been successfully generated
+if 'last_story_output' in st.session_state and st.session_state['last_story_output']:
+    st.divider()
+    st.subheader("💾 Save for the Field")
+    st.info("The story has been saved to memory. You can download it below to print or share.")
+    
+    st.download_button(
+        label="📥 Download Story as Text File",
+        data=st.session_state['last_story_output'],
+        file_name=f"Tide_Tale_{st.session_state['user_location'].replace(' ', '_')}.txt",
+        mime="text/plain",
+        key="download_btn"
+    )
