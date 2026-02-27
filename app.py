@@ -17,6 +17,48 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap');
+
+html, body, [class*="css"], .stMarkdown, p, li {
+    font-family: 'Source Serif 4', Georgia, serif !important;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+}
+h1 {
+    font-family: 'Playfair Display', Georgia, serif !important;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+h2, h3 {
+    font-family: 'Playfair Display', Georgia, serif !important;
+    font-weight: 400;
+    font-style: italic;
+}
+[data-testid="stMetricLabel"] {
+    font-family: 'Source Serif 4', Georgia, serif !important;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+[data-testid="stMetricValue"] {
+    font-family: 'Playfair Display', Georgia, serif !important;
+    font-weight: 700;
+}
+.stButton > button {
+    font-family: 'Playfair Display', Georgia, serif !important;
+    font-style: italic;
+    letter-spacing: 0.03em;
+}
+.stCaption, small {
+    font-family: 'Source Serif 4', Georgia, serif !important;
+    font-style: italic;
+    opacity: 0.75;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # ============================================================
 # 2. SESSION STATE INITIALIZATION
 # ============================================================
@@ -110,7 +152,7 @@ def ai_interpret_data(df, api_key):
 
 
 def build_demo_narrative(loc, sci, selected_range, net_shift, slope, val_end, trough):
-    """Procedural narrative engine for demo/offline mode."""
+    """Procedural narrative engine for demo/offline mode with Odia placeholder vernacular."""
     intensity = (
         "a frantic gallop" if slope > 0.015
         else "a steady, relentless climb" if slope > 0.005
@@ -135,13 +177,24 @@ def build_demo_narrative(loc, sci, selected_range, net_shift, slope, val_end, tr
         f"The measurement stands today at **{round(val_end, 2)}**, far from the stability of the past. The trough of **{round(trough, 2)}** is a milestone we are leaving behind."
     ]
 
-    chapters = [
+    english_chapters = [
         f"### Chapter 1: The Omens\n{random.choice(ch1_opts)} The data reveals a shift of **{round(net_shift, 2)}**, but to the people here, it is {impact}.",
         f"### Chapter 2: The Quickening\n{random.choice(ch2_opts)} This is no longer a fluctuation — it is a transformation of our physical reality, lived by every soul in {loc}.",
         f"### Chapter 3: The Ghost in the Mirror\n{random.choice(ch3_opts)} We realize the balance has shifted. The space between the data and our lives is where the fear lives — and where hope must grow.",
         f"### Chapter 4: The Convergence\nAs we stand at the end of this record in **{selected_range[1]}**, the narrative of {sci['metaphor']} is an epic still being written. In **{loc}**, the convergence of scientific truth and local song is our only map home."
     ]
-    return "\n\n".join(chapters)
+
+    odia_chapters = [
+        f"### ଅଧ୍ୟାୟ ୧ — ଶକୁନ\n**{loc}** ର ପୁରୁଣା ସ୍ମୃତିରେ, ପବନ ଥରେ ଏକ ପୂର୍ବାନୁମାନ ଭାଷା କଥା ହୋଇଥିଲା। କିନ୍ତୁ **{selected_range[0]}** ଠାରୁ, {sci['metaphor']} ର ଭାଷାରେ ଏକ ନୂଆ ଉପଭାଷା ଉଦୟ ହୋଇଛି। ପୃଥିବୀ **{round(net_shift, 2)}** ର ପରିବର୍ତ୍ତନ ଅନୁଭବ କରିଛି।",
+        f"### ଅଧ୍ୟାୟ ୨ — ତ୍ବରଣ\nବିଜ୍ଞାନ ଆମ ହୃଦୟ ଯାହା ଅନୁଭବ କରୁଥିଲା ତାହା ନିଶ୍ଚିତ କରୁଛି। ଆମର ପ୍ରବୃତ୍ତି ରେଖା **{intensity}** ରେ ଗତି କରୁଛି — ପ୍ରତି ବର୍ଷ **{round(slope, 4)}** ଏକକ ହାରରେ। ଏହା ଆଉ ଏକ ଉଚ୍ଛ୍ବାସ ନୁହେଁ।",
+        f"### ଅଧ୍ୟାୟ ୩ — ଦର୍ପଣରେ ଭୂତ\n**{loc}** ରେ ଏକ କିମ୍ବଦନ୍ତୀ ଅଛି ଏକ ଦର୍ପଣ ବିଷୟରେ ଯାହା ପୃଥିବୀର ସ୍ୱାସ୍ଥ୍ୟ ପ୍ରତିଫଳିତ କରେ। ଆଜି, ସେହି ଦର୍ପଣ ଧୂଆଁଳିଆ। **{round(trough, 2)}** ର ନ୍ୟୂନତମ ଏକ ଅଧିକ ସ୍ଥିର ଅତୀତର ଅବଶିଷ୍ଟ।",
+        f"### ଅଧ୍ୟାୟ ୪ — ସଂଗମ\n**{selected_range[1]}** ରେ ଏହି ରେକର୍ଡ ଶେଷରେ ଠିଆ ହୋଇ, {sci['metaphor']} ର ଆଖ୍ୟାନ ଏକ ମହାକାବ୍ୟ ଯାହା ଏବେ ବି ଲେଖା ଯାଉଛି। **{loc}** ରେ, ବୈଜ୍ଞାନିକ ସତ୍ୟ ଏବଂ ସ୍ଥାନୀୟ ଗୀତର ମିଳନ ହିଁ ଆମର ଏକମାତ୍ର ଘର ଫେରିବା ମାନଚିତ୍ର।"
+    ]
+
+    combined = []
+    for eng, odi in zip(english_chapters, odia_chapters):
+        combined.append(f"[ENGLISH]\n{eng}\n\n[LOCAL]\n{odi}")
+    return "\n\n---\n\n".join(combined)
 
 
 # ============================================================
@@ -341,10 +394,18 @@ if st.session_state['data_mapped'] is not None:
         if demo_mode or not api_key:
             st.info("Demo Mode: Generating procedural narrative (no API key needed)...")
             story = build_demo_narrative(loc, mood, selected_range, net_shift, slope, val_end, trough)
-            for chapter in story.split("\n\n"):
-                st.markdown(chapter)
-                time.sleep(0.5)
-            st.session_state['last_story_output'] = story
+            col_e, col_l = st.columns(2)
+            col_e.subheader("🇬🇧 English")
+            col_l.subheader("🏠 ଓଡ଼ିଆ (Odia)")
+            for block in story.split("\n\n---\n\n"):
+                if "[LOCAL]" in block:
+                    parts = block.split("[LOCAL]")
+                    e_text = parts[0].replace("[ENGLISH]", "").strip()
+                    l_text = parts[1].strip()
+                    col_e.markdown(e_text)
+                    col_l.markdown(l_text)
+                    time.sleep(0.4)
+            st.session_state['last_story_output'] = story.replace("[ENGLISH]", "").replace("[LOCAL]", "\n\n---\nOdia:\n")
             st.balloons()
 
         else:
