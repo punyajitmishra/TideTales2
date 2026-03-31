@@ -139,7 +139,7 @@ def ai_interpret_data(df, api_key):
     Label: [science label, e.g. Air Quality, Sea Level Rise, Global Warming]
     """
     response = client.messages.create(
-        model="claude-3-5-sonnet-20240620",
+        model="claude-sonnet-4-5",
         max_tokens=200,
         messages=[{"role": "user", "content": prompt}]
     )
@@ -204,10 +204,16 @@ with st.sidebar:
     st.title("🌊 Tide Tales")
     st.divider()
 
-    api_key = st.text_input(
-        "Anthropic API Key", type="password", key="api_key",
-        help="Get your key from console.anthropic.com. Required for AI narrative and CSV sniffing."
-    )
+    # FIX 2: Check st.secrets first, fall back to text input
+    _secret_key = st.secrets.get("ANTHROPIC_API_KEY", "") if hasattr(st, "secrets") else ""
+    if _secret_key:
+        api_key = _secret_key
+        st.success("🔑 API key loaded from secrets.", icon="✅")
+    else:
+        api_key = st.text_input(
+            "Anthropic API Key", type="password", key="api_key",
+            help="Get your key from console.anthropic.com. Required for AI narrative and CSV sniffing."
+        )
 
     st.markdown("**📍 Location Context**")
     st.session_state['user_location'] = st.text_input(
@@ -256,6 +262,8 @@ with st.sidebar:
     )
 
     st.divider()
+
+    # FIX 3: demo_mode reacts to live api_key value
     demo_mode = st.toggle(
         "Demo Mode (no API key needed)",
         value=not bool(api_key),
@@ -438,6 +446,7 @@ if st.session_state['data_mapped'] is not None:
             FORMAT: Write the FULL story in English first, then the FULL story in the local vernacular of {loc} (Odia if Bhubaneswar). Use [ENGLISH] and [LOCAL] markers.
             """
 
+            # FIX 1: Updated model to claude-sonnet-4-5
             client = anthropic.Anthropic(api_key=api_key)
             col_e, col_l = st.columns(2)
             col_e.subheader("🇬🇧 English")
@@ -448,7 +457,7 @@ if st.session_state['data_mapped'] is not None:
 
             try:
                 with client.messages.stream(
-                    model="claude-3-5-sonnet-20240620",
+                    model="claude-sonnet-4-5",
                     max_tokens=8192,
                     messages=[{"role": "user", "content": prompt}]
                 ) as stream:
