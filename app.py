@@ -198,22 +198,18 @@ def build_demo_narrative(loc, sci, selected_range, net_shift, slope, val_end, tr
 
 
 # ============================================================
-# 4. SIDEBAR
+# 4. SIDEBAR  
 # ============================================================
 with st.sidebar:
     st.title("🌊 Tide Tales")
     st.divider()
 
-    # FIX 2: Check st.secrets first, fall back to text input
-    _secret_key = st.secrets.get("ANTHROPIC_API_KEY", "") if hasattr(st, "secrets") else ""
-    if _secret_key:
-        api_key = _secret_key
-        st.success("🔑 API key loaded from secrets.", icon="✅")
+    # Load API key exclusively from st.secrets
+    api_key = st.secrets.get("ANTHROPIC_API_KEY", "")
+    if api_key:
+        st.success("🔑 API key loaded.", icon="✅")
     else:
-        api_key = st.text_input(
-            "Anthropic API Key", type="password", key="api_key",
-            help="Get your key from console.anthropic.com. Required for AI narrative and CSV sniffing."
-        )
+        st.warning("⚠️ No API key found in secrets. Running in Demo Mode.")
 
     st.markdown("**📍 Location Context**")
     st.session_state['user_location'] = st.text_input(
@@ -263,13 +259,11 @@ with st.sidebar:
 
     st.divider()
 
-    # FIX 3: demo_mode reacts to live api_key value
     demo_mode = st.toggle(
         "Demo Mode (no API key needed)",
         value=not bool(api_key),
         key="side_demo"
     )
-
 
 # ============================================================
 # 5. DATA LOADING
