@@ -19,42 +19,377 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap');
+/* ── FONTS ── */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Instrument+Serif:ital@0;1&display=swap');
 
-html, body, [class*="css"], .stMarkdown, p, li {
-    font-family: 'Source Serif 4', Georgia, serif !important;
-    font-weight: 300;
-    letter-spacing: 0.01em;
+/* ── ROOT TOKENS ── */
+:root {
+    --ink:        #0d0d0d;
+    --paper:      #f5f0e8;
+    --paper-dark: #ede7d9;
+    --ocean:      #0a3d62;
+    --tide:       #1e6fa5;
+    --foam:       #a8d8ea;
+    --ember:      #c0392b;
+    --gold:       #b8860b;
+    --mist:       #7f8c8d;
+    --rule:       rgba(13,13,13,0.12);
 }
-h1 {
-    font-family: 'Playfair Display', Georgia, serif !important;
-    font-weight: 700;
-    letter-spacing: -0.02em;
+
+/* ── GLOBAL RESET ── */
+html, body, [class*="css"] {
+    background-color: var(--paper) !important;
+    color: var(--ink) !important;
 }
-h2, h3 {
-    font-family: 'Playfair Display', Georgia, serif !important;
-    font-weight: 400;
-    font-style: italic;
+
+/* Hide Streamlit chrome */
+#MainMenu, footer, header { visibility: hidden; }
+.stDeployButton { display: none; }
+[data-testid="stToolbar"] { display: none; }
+
+/* ── SIDEBAR ── */
+[data-testid="stSidebar"] {
+    background-color: var(--ocean) !important;
+    border-right: none !important;
 }
-[data-testid="stMetricLabel"] {
-    font-family: 'Source Serif 4', Georgia, serif !important;
-    font-size: 0.8rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+[data-testid="stSidebar"] * {
+    color: var(--paper) !important;
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.78rem !important;
+    letter-spacing: 0.04em;
 }
-[data-testid="stMetricValue"] {
-    font-family: 'Playfair Display', Georgia, serif !important;
-    font-weight: 700;
+[data-testid="stSidebar"] h1 {
+    font-family: 'Cormorant Garamond', Georgia, serif !important;
+    font-size: 1.8rem !important;
+    font-weight: 300 !important;
+    font-style: italic !important;
+    letter-spacing: 0.02em !important;
+    color: var(--foam) !important;
+    border-bottom: 1px solid rgba(168,216,234,0.3);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
 }
-.stButton > button {
-    font-family: 'Playfair Display', Georgia, serif !important;
-    font-style: italic;
-    letter-spacing: 0.03em;
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3 {
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.65rem !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+    color: var(--foam) !important;
+    opacity: 0.7;
 }
-.stCaption, small {
-    font-family: 'Source Serif 4', Georgia, serif !important;
-    font-style: italic;
-    opacity: 0.75;
+[data-testid="stSidebar"] .stTextInput input,
+[data-testid="stSidebar"] .stSelectbox select {
+    background-color: rgba(255,255,255,0.08) !important;
+    border: 1px solid rgba(168,216,234,0.25) !important;
+    border-radius: 2px !important;
+    color: var(--paper) !important;
+    font-family: 'DM Mono', monospace !important;
+}
+[data-testid="stSidebar"] .stButton > button {
+    background: transparent !important;
+    border: 1px solid rgba(168,216,234,0.35) !important;
+    color: var(--foam) !important;
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.7rem !important;
+    letter-spacing: 0.08em !important;
+    border-radius: 2px !important;
+    padding: 0.3rem 0.8rem !important;
+    transition: all 0.2s ease;
+}
+[data-testid="stSidebar"] .stButton > button:hover {
+    background: rgba(168,216,234,0.15) !important;
+    border-color: var(--foam) !important;
+}
+[data-testid="stSidebar"] hr {
+    border-color: rgba(168,216,234,0.2) !important;
+}
+[data-testid="stSidebar"] .stRadio label,
+[data-testid="stSidebar"] .stToggle label {
+    color: rgba(245,240,232,0.8) !important;
+}
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
+    color: rgba(245,240,232,0.65) !important;
+    font-size: 0.72rem !important;
+}
+/* Success/warning boxes in sidebar */
+[data-testid="stSidebar"] .stAlert {
+    background: rgba(255,255,255,0.06) !important;
+    border: 1px solid rgba(168,216,234,0.2) !important;
+    border-radius: 2px !important;
+}
+
+/* ── MAIN CONTENT AREA ── */
+.main .block-container {
+    padding: 2rem 3rem 4rem 3rem !important;
+    max-width: 1100px !important;
+}
+
+/* ── MASTHEAD / TITLE ── */
+.main h1 {
+    font-family: 'Cormorant Garamond', Georgia, serif !important;
+    font-size: clamp(3rem, 6vw, 5.5rem) !important;
+    font-weight: 300 !important;
+    font-style: italic !important;
+    letter-spacing: -0.02em !important;
+    line-height: 1.05 !important;
+    color: var(--ocean) !important;
+    margin-bottom: 0 !important;
+}
+
+/* Caption under title */
+.main [data-testid="stCaptionContainer"] p {
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.72rem !important;
+    letter-spacing: 0.14em !important;
+    text-transform: uppercase !important;
+    color: var(--mist) !important;
+    border-top: 2px solid var(--ink) !important;
+    border-bottom: 1px solid var(--rule) !important;
+    padding: 0.4rem 0 !important;
+    margin-top: 0.3rem !important;
+}
+
+/* ── SECTION HEADERS ── */
+.main h2 {
+    font-family: 'Cormorant Garamond', Georgia, serif !important;
+    font-size: 2rem !important;
+    font-weight: 400 !important;
+    font-style: italic !important;
+    color: var(--ocean) !important;
+    border-bottom: 1px solid var(--rule) !important;
+    padding-bottom: 0.4rem !important;
+    margin-top: 2rem !important;
+}
+.main h3 {
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.7rem !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
+    letter-spacing: 0.14em !important;
+    text-transform: uppercase !important;
+    color: var(--mist) !important;
+    margin-top: 1.5rem !important;
+}
+
+/* ── BODY TEXT ── */
+.main p, .main li, .main .stMarkdown {
+    font-family: 'Instrument Serif', Georgia, serif !important;
+    font-size: 1.05rem !important;
+    line-height: 1.75 !important;
+    color: #1a1a1a !important;
+}
+
+/* ── METRICS / FACT PACK ── */
+[data-testid="stMetric"] {
+    background: var(--paper-dark) !important;
+    border: 1px solid var(--rule) !important;
+    border-top: 3px solid var(--ocean) !important;
+    padding: 1rem 1.2rem !important;
+    border-radius: 0 !important;
+}
+[data-testid="stMetricLabel"] > div {
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.62rem !important;
+    letter-spacing: 0.14em !important;
+    text-transform: uppercase !important;
+    color: var(--mist) !important;
+}
+[data-testid="stMetricValue"] > div {
+    font-family: 'Cormorant Garamond', Georgia, serif !important;
+    font-size: 2rem !important;
+    font-weight: 600 !important;
+    color: var(--ocean) !important;
+    line-height: 1.1 !important;
+}
+[data-testid="stMetricDelta"] {
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.7rem !important;
+}
+
+/* ── MAIN BUTTON ── */
+.main .stButton > button {
+    background-color: var(--ocean) !important;
+    color: var(--paper) !important;
+    border: none !important;
+    border-radius: 0 !important;
+    font-family: 'Cormorant Garamond', Georgia, serif !important;
+    font-style: italic !important;
+    font-size: 1.1rem !important;
+    font-weight: 400 !important;
+    letter-spacing: 0.04em !important;
+    padding: 0.7rem 2.2rem !important;
+    transition: background 0.25s ease, transform 0.15s ease !important;
+    box-shadow: 3px 3px 0 var(--gold) !important;
+}
+.main .stButton > button:hover {
+    background-color: var(--tide) !important;
+    transform: translate(-1px, -1px) !important;
+    box-shadow: 4px 4px 0 var(--gold) !important;
+}
+.main .stButton > button:active {
+    transform: translate(1px, 1px) !important;
+    box-shadow: 1px 1px 0 var(--gold) !important;
+}
+
+/* ── DOWNLOAD BUTTON ── */
+.main [data-testid="stDownloadButton"] > button {
+    background: transparent !important;
+    border: 1px solid var(--ocean) !important;
+    border-radius: 0 !important;
+    color: var(--ocean) !important;
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.75rem !important;
+    letter-spacing: 0.08em !important;
+    padding: 0.5rem 1.5rem !important;
+    transition: all 0.2s ease !important;
+}
+.main [data-testid="stDownloadButton"] > button:hover {
+    background: var(--ocean) !important;
+    color: var(--paper) !important;
+}
+
+/* ── SLIDER ── */
+[data-testid="stSlider"] {
+    padding: 0.5rem 0 !important;
+}
+[data-testid="stSlider"] > div > div > div > div {
+    background: var(--ocean) !important;
+}
+[data-testid="stSlider"] label {
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.7rem !important;
+    letter-spacing: 0.1em !important;
+    text-transform: uppercase !important;
+    color: var(--mist) !important;
+}
+
+/* ── EXPANDERS ── */
+.main [data-testid="stExpander"] {
+    border: 1px solid var(--rule) !important;
+    border-radius: 0 !important;
+    background: var(--paper-dark) !important;
+}
+.main [data-testid="stExpander"] summary {
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.72rem !important;
+    letter-spacing: 0.1em !important;
+    text-transform: uppercase !important;
+    color: var(--ocean) !important;
+}
+
+/* ── ALERTS / INFO BOXES ── */
+.main .stAlert {
+    border-radius: 0 !important;
+    border-left-width: 3px !important;
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.78rem !important;
+}
+
+/* ── DIVIDER ── */
+hr {
+    border: none !important;
+    border-top: 1px solid var(--rule) !important;
+    margin: 2rem 0 !important;
+}
+
+/* ── NARRATIVE OUTPUT ── */
+.main [data-testid="stMarkdownContainer"] h3 {
+    font-family: 'Cormorant Garamond', Georgia, serif !important;
+    font-size: 1.3rem !important;
+    font-weight: 600 !important;
+    font-style: italic !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+    color: var(--ocean) !important;
+    border-left: 3px solid var(--gold) !important;
+    padding-left: 0.8rem !important;
+    margin-top: 2rem !important;
+}
+
+/* Subheaders (English / Local labels) */
+.main [data-testid="stMarkdownContainer"] h2 {
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.65rem !important;
+    letter-spacing: 0.18em !important;
+    text-transform: uppercase !important;
+    color: var(--mist) !important;
+    border-bottom: 1px solid var(--rule) !important;
+    padding-bottom: 0.3rem !important;
+    font-style: normal !important;
+}
+
+/* ── SPINNER ── */
+[data-testid="stSpinner"] p {
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.72rem !important;
+    letter-spacing: 0.1em !important;
+    color: var(--mist) !important;
+}
+
+/* ── FILE UPLOADER ── */
+[data-testid="stFileUploader"] {
+    border: 1px dashed rgba(13,13,13,0.2) !important;
+    border-radius: 0 !important;
+    background: var(--paper-dark) !important;
+    padding: 1rem !important;
+}
+
+/* ── PLOTLY CHART container ── */
+[data-testid="stPlotlyChart"] {
+    border: 1px solid var(--rule) !important;
+    padding: 0.5rem !important;
+    background: #0d1b2a !important;
+}
+
+/* ── RADIO & TOGGLE ── */
+.main .stRadio label,
+.main .stToggle label {
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.78rem !important;
+    letter-spacing: 0.04em !important;
+}
+
+/* ── SELECT SLIDER ── */
+.main [data-testid="stSlider"] {
+    font-family: 'DM Mono', monospace !important;
+}
+
+/* ── DECORATIVE PULL QUOTE for narrative ── */
+blockquote {
+    border-left: 4px solid var(--gold) !important;
+    padding-left: 1.2rem !important;
+    font-family: 'Cormorant Garamond', Georgia, serif !important;
+    font-style: italic !important;
+    font-size: 1.25rem !important;
+    color: var(--ocean) !important;
+    margin: 1.5rem 0 !important;
+}
+
+/* ── CAPTION ── */
+.main small, .main .stCaption {
+    font-family: 'DM Mono', monospace !important;
+    font-size: 0.68rem !important;
+    letter-spacing: 0.06em !important;
+    color: var(--mist) !important;
+}
+
+/* ── SUCCESS / WARNING ── */
+.main [data-testid="stNotification"] {
+    border-radius: 0 !important;
+}
+
+/* Thin top rule on page like a newspaper */
+.main .block-container::before {
+    content: '';
+    display: block;
+    height: 4px;
+    background: linear-gradient(90deg, var(--ocean) 0%, var(--tide) 50%, var(--foam) 100%);
+    margin-bottom: 1.5rem;
+    margin-left: -3rem;
+    margin-right: -3rem;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -77,7 +412,6 @@ for k, v in defaults.items():
 # ============================================================
 
 def get_server_location():
-    """Attempts IP-based location detection."""
     try:
         res = requests.get('https://ipapi.co/json/', timeout=5).json()
         city = res.get('city', 'Bhubaneswar')
@@ -88,7 +422,6 @@ def get_server_location():
 
 
 def get_science_mood(label):
-    """Returns visual and metaphorical theme based on science type."""
     lbl = str(label).lower()
     if any(k in lbl for k in ['temp', 'warm', 'anomaly', 'j-d']):
         return {"element": "Fire", "metaphor": "the earth's fever", "color": "#00D4FF"}
@@ -98,12 +431,11 @@ def get_science_mood(label):
         return {"element": "Water", "metaphor": "the hungry ocean", "color": "#2ECC71"}
     if any(k in lbl for k in ['co2', 'carbon', 'ppm']):
         return {"element": "Weight", "metaphor": "the heavy sky", "color": "#8E44AD"}
-    return {"element": "Change", "metaphor": "the changing pulse", "color": "#FFFFFF"}
+    return {"element": "Change", "metaphor": "the changing pulse", "color": "#a8d8ea"}
 
 
 @st.cache_data(show_spinner=False)
 def fetch_nasa_gistemp():
-    """Fetches live NASA GISTEMP global temperature data."""
     url = "https://data.giss.nasa.gov/gistemp/tabledata_v4/GLB.Ts+dSST.csv"
     try:
         df = pd.read_csv(url, skiprows=1, na_values="***")
@@ -114,18 +446,15 @@ def fetch_nasa_gistemp():
             return df_clean, {"YearCol": "Year", "DataCol": "J-D", "Unit": "°C Anomaly", "Label": "Global Warming"}
     except Exception as e:
         st.warning(f"NASA fetch failed ({e}). Using fallback data.")
-    # Fallback synthetic data
     years = list(range(1880, 2024))
     vals = np.linspace(-0.3, 1.2, len(years)) + np.random.normal(0, 0.05, len(years))
     return pd.DataFrame({'year': years, 'val': vals}), {"YearCol": "Year", "DataCol": "J-D", "Unit": "°C Anomaly", "Label": "Global Warming"}
 
 
 def ai_interpret_data(df, api_key):
-    """Uses Claude to sniff CSV column structure and science type."""
     client = anthropic.Anthropic(api_key=api_key)
     sample = df.head(10).to_string()
     headers = df.columns.tolist()
-
     prompt = f"""
     Analyze this climate dataset and identify its structure.
     HEADERS: {headers}
@@ -152,7 +481,6 @@ def ai_interpret_data(df, api_key):
 
 
 def build_demo_narrative(loc, sci, selected_range, net_shift, slope, val_end, trough):
-    """Procedural narrative engine for demo/offline mode with Odia placeholder vernacular."""
     intensity = (
         "a frantic gallop" if slope > 0.015
         else "a steady, relentless climb" if slope > 0.005
@@ -163,7 +491,6 @@ def build_demo_narrative(loc, sci, selected_range, net_shift, slope, val_end, tr
         if abs(net_shift) > 1.0
         else "the balance is beginning to fray at the edges"
     )
-
     ch1_opts = [
         f"In the ancient memory of **{loc}**, the wind once spoke a language of predictable seasons. But since **{selected_range[0]}**, a new dialect has emerged—one written in the language of {sci['metaphor']}.",
         f"The soil of **{loc}** has its own way of keeping time. Long before we had records starting in **{selected_range[0]}**, the ancestors knew the rhythm of the {sci['element']}. Now, that rhythm has faltered."
@@ -176,21 +503,18 @@ def build_demo_narrative(loc, sci, selected_range, net_shift, slope, val_end, tr
         f"There is a legend in **{loc}** about a mirror that reflects the health of the earth. Today, that mirror is clouded. The trough of **{round(trough, 2)}** is a ghost—a remnant of a more stable past.",
         f"The measurement stands today at **{round(val_end, 2)}**, far from the stability of the past. The trough of **{round(trough, 2)}** is a milestone we are leaving behind."
     ]
-
     english_chapters = [
         f"### Chapter 1: The Omens\n{random.choice(ch1_opts)} The data reveals a shift of **{round(net_shift, 2)}**, but to the people here, it is {impact}.",
         f"### Chapter 2: The Quickening\n{random.choice(ch2_opts)} This is no longer a fluctuation — it is a transformation of our physical reality, lived by every soul in {loc}.",
         f"### Chapter 3: The Ghost in the Mirror\n{random.choice(ch3_opts)} We realize the balance has shifted. The space between the data and our lives is where the fear lives — and where hope must grow.",
         f"### Chapter 4: The Convergence\nAs we stand at the end of this record in **{selected_range[1]}**, the narrative of {sci['metaphor']} is an epic still being written. In **{loc}**, the convergence of scientific truth and local song is our only map home."
     ]
-
     odia_chapters = [
         f"### ଅଧ୍ୟାୟ ୧ — ଶକୁନ\n**{loc}** ର ପୁରୁଣା ସ୍ମୃତିରେ, ପବନ ଥରେ ଏକ ପୂର୍ବାନୁମାନ ଭାଷା କଥା ହୋଇଥିଲା। କିନ୍ତୁ **{selected_range[0]}** ଠାରୁ, {sci['metaphor']} ର ଭାଷାରେ ଏକ ନୂଆ ଉପଭାଷା ଉଦୟ ହୋଇଛି। ପୃଥିବୀ **{round(net_shift, 2)}** ର ପରିବର୍ତ୍ତନ ଅନୁଭବ କରିଛି।",
         f"### ଅଧ୍ୟାୟ ୨ — ତ୍ବରଣ\nବିଜ୍ଞାନ ଆମ ହୃଦୟ ଯାହା ଅନୁଭବ କରୁଥିଲା ତାହା ନିଶ୍ଚିତ କରୁଛି। ଆମର ପ୍ରବୃତ୍ତି ରେଖା **{intensity}** ରେ ଗତି କରୁଛି — ପ୍ରତି ବର୍ଷ **{round(slope, 4)}** ଏକକ ହାରରେ। ଏହା ଆଉ ଏକ ଉଚ୍ଛ୍ବାସ ନୁହେଁ।",
         f"### ଅଧ୍ୟାୟ ୩ — ଦର୍ପଣରେ ଭୂତ\n**{loc}** ରେ ଏକ କିମ୍ବଦନ୍ତୀ ଅଛି ଏକ ଦର୍ପଣ ବିଷୟରେ ଯାହା ପୃଥିବୀର ସ୍ୱାସ୍ଥ୍ୟ ପ୍ରତିଫଳିତ କରେ। ଆଜି, ସେହି ଦର୍ପଣ ଧୂଆଁଳିଆ। **{round(trough, 2)}** ର ନ୍ୟୂନତମ ଏକ ଅଧିକ ସ୍ଥିର ଅତୀତର ଅବଶିଷ୍ଟ।",
         f"### ଅଧ୍ୟାୟ ୪ — ସଂଗମ\n**{selected_range[1]}** ରେ ଏହି ରେକର୍ଡ ଶେଷରେ ଠିଆ ହୋଇ, {sci['metaphor']} ର ଆଖ୍ୟାନ ଏକ ମହାକାବ୍ୟ ଯାହା ଏବେ ବି ଲେଖା ଯାଉଛି। **{loc}** ରେ, ବୈଜ୍ଞାନିକ ସତ୍ୟ ଏବଂ ସ୍ଥାନୀୟ ଗୀତର ମିଳନ ହିଁ ଆମର ଏକମାତ୍ର ଘର ଫେରିବା ମାନଚିତ୍ର।"
     ]
-
     combined = []
     for eng, odi in zip(english_chapters, odia_chapters):
         combined.append(f"[ENGLISH]\n{eng}\n\n[LOCAL]\n{odi}")
@@ -198,25 +522,24 @@ def build_demo_narrative(loc, sci, selected_range, net_shift, slope, val_end, tr
 
 
 # ============================================================
-# 4. SIDEBAR  
+# 4. SIDEBAR
 # ============================================================
 with st.sidebar:
     st.title("🌊 Tide Tales")
     st.divider()
 
-    # Load API key exclusively from st.secrets
     api_key = st.secrets.get("ANTHROPIC_API_KEY", "")
     if api_key:
         st.success("🔑 API key loaded.", icon="✅")
     else:
-        st.warning("⚠️ No API key found in secrets. Running in Demo Mode.")
+        st.warning("⚠️ No API key found. Running in Demo Mode.")
 
     st.markdown("**📍 Location Context**")
     st.session_state['user_location'] = st.text_input(
         "Your Location",
         value=st.session_state['user_location'],
         key="loc_input",
-        help="Anchors the story in local folklore (e.g., Bhubaneswar, New Delhi, Sundarbans)."
+        help="Anchors the story in local folklore."
     )
     col_loc1, col_loc2 = st.columns(2)
     if col_loc1.button("🔄 Auto-detect", key="loc_retry"):
@@ -225,7 +548,6 @@ with st.sidebar:
 
     st.divider()
 
-    # Data source
     source_choice = st.radio(
         "Data Source",
         ["🛰️ NASA GISTEMP (Auto)", "📁 Upload My Own CSV"],
@@ -241,14 +563,12 @@ with st.sidebar:
 
     st.divider()
 
-    # Narrative style controls
     st.subheader("🎨 Narrative Style")
     narr_tone = st.select_slider(
         "Tone",
         options=["Scientific", "Balanced", "Mythic"],
         value="Balanced",
         key="narr_tone",
-        help="Scientific = data-focused. Mythic = folklore-led. Balanced = weaves both."
     )
     narr_length = st.radio(
         "Story Length",
@@ -265,6 +585,7 @@ with st.sidebar:
         key="side_demo"
     )
 
+
 # ============================================================
 # 5. DATA LOADING
 # ============================================================
@@ -278,7 +599,6 @@ elif source_choice == "📁 Upload My Own CSV" and user_file:
     try:
         raw_df = pd.read_csv(user_file, na_values="***")
         st.info(f"File loaded: {raw_df.shape[0]} rows, {raw_df.shape[1]} columns.")
-
         if st.button("🔍 AI: Interpret Data Structure", key="sniff_btn"):
             if not api_key:
                 st.error("API Key required to use the AI column sniffer.")
@@ -305,16 +625,15 @@ elif source_choice == "📁 Upload My Own CSV" and user_file:
 st.title("🌊 Tide Tales")
 st.caption("Where scientific data becomes living story.")
 
-# Orientation Center
 col_how, col_gal = st.columns(2)
 with col_how:
     with st.expander("❓ How to use Tide Tales"):
         st.markdown("""
-        1. **Set Location** — Confirm your city in the sidebar for localized folklore.
-        2. **Choose Data** — Use NASA for instant results, or upload your own climate CSV.
-        3. **Refine** — Drag the timeline slider to the period you want to explore.
-        4. **Style** — Choose Tone (Scientific → Mythic) and Story Length in the sidebar.
-        5. **Weave** — Hit **Weave Narrative** to generate your dual-language epic.
+1. **Set Location** — Confirm your city in the sidebar for localized folklore.
+2. **Choose Data** — Use NASA for instant results, or upload your own climate CSV.
+3. **Refine** — Drag the timeline slider to the period you want to explore.
+4. **Style** — Choose Tone (Scientific → Mythic) and Story Length in the sidebar.
+5. **Weave** — Hit **Weave Narrative** to generate your dual-language epic.
         """)
 with col_gal:
     with st.expander("📚 Example Use Cases"):
@@ -333,7 +652,6 @@ if st.session_state['data_mapped'] is not None:
     mood = get_science_mood(meta.get('Label', ''))
 
     data = data.apply(pd.to_numeric, errors='coerce').dropna()
-
     min_y, max_y = int(data['year'].min()), int(data['year'].max())
     if min_y >= max_y:
         max_y = min_y + 1
@@ -350,14 +668,12 @@ if st.session_state['data_mapped'] is not None:
         st.warning("Not enough data in selected range. Adjust the slider.")
         st.stop()
 
-    # Math (Fact Pack)
     slope, intercept = np.polyfit(f_df['year'].values, f_df['val'].values, 1)
     net_shift = f_df['val'].iloc[-1] - f_df['val'].iloc[0]
     peak = f_df['val'].max()
     trough = f_df['val'].min()
     val_end = f_df['val'].iloc[-1]
 
-    # Evidence Panel
     st.header(f"📊 Evidence: {meta.get('Label', 'Climate Data')}")
     st.write(f"Observing **{meta.get('Label', 'change')}** as experienced in **{st.session_state['user_location']}**.")
 
@@ -371,13 +687,19 @@ if st.session_state['data_mapped'] is not None:
         x=f_df['year'],
         y=slope * f_df['year'] + intercept,
         name="Trend Line",
-        line=dict(color='red', dash='dot', width=2)
+        line=dict(color='#b8860b', dash='dot', width=2)
     )
     fig.update_traces(selector=dict(mode='lines'), line_color=mood['color'], line_width=2.5)
-    fig.update_layout(margin=dict(t=50, b=20))
+    fig.update_layout(
+        margin=dict(t=50, b=20),
+        paper_bgcolor='#0d1b2a',
+        plot_bgcolor='#0d1b2a',
+        font=dict(family='DM Mono, monospace', color='#a8d8ea', size=11),
+        title_font=dict(family='Cormorant Garamond, Georgia, serif', size=18, color='#a8d8ea'),
+        legend=dict(font=dict(family='DM Mono, monospace', size=10)),
+    )
     st.plotly_chart(fig, use_container_width=True)
 
-    # Fact Pack
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Net Shift", f"{round(net_shift, 2)} {meta.get('Unit', '')}")
     c2.metric("Trend Rate", f"{round(slope, 4)} / yr")
@@ -440,7 +762,6 @@ if st.session_state['data_mapped'] is not None:
             FORMAT: Write the FULL story in English first, then the FULL story in the local vernacular of {loc} (Odia if Bhubaneswar). Use [ENGLISH] and [LOCAL] markers.
             """
 
-            # FIX 1: Updated model to claude-sonnet-4-5
             client = anthropic.Anthropic(api_key=api_key)
             col_e, col_l = st.columns(2)
             col_e.subheader("🇬🇧 English")
