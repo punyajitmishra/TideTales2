@@ -139,7 +139,7 @@ def ai_interpret_data(df, api_key):
     Label: [science label, e.g. Air Quality, Sea Level Rise, Global Warming]
     """
     response = client.messages.create(
-        model="claude-sonnet-4-5",
+        model="claude-sonnet-4-6",
         max_tokens=200,
         messages=[{"role": "user", "content": prompt}]
     )
@@ -404,8 +404,9 @@ if st.session_state['data_mapped'] is not None:
                     parts = block.split("[LOCAL]")
                     e_text = parts[0].replace("[ENGLISH]", "").strip()
                     l_text = parts[1].strip()
-                    col_e.markdown(e_text)
-                    col_l.markdown(l_text)
+                    row_e, row_l = st.columns(2)]
+                    row_e.markdown(e_text)
+                    row_l.markdown(l_text)
                     time.sleep(0.4)
             st.session_state['last_story_output'] = story.replace("[ENGLISH]", "").replace("[LOCAL]", "\n\n---\nOdia:\n")
             st.balloons()
@@ -440,7 +441,6 @@ if st.session_state['data_mapped'] is not None:
             FORMAT: Write the FULL story in English first, then the FULL story in the local vernacular of {loc} (Odia if Bhubaneswar). Use [ENGLISH] and [LOCAL] markers.
             """
 
-            # FIX 1: Updated model to claude-sonnet-4-5
             client = anthropic.Anthropic(api_key=api_key)
             col_e, col_l = st.columns(2)
             col_e.subheader("🇬🇧 English")
@@ -448,30 +448,39 @@ if st.session_state['data_mapped'] is not None:
             e_placeholder = col_e.empty()
             l_placeholder = col_l.empty()
             full_resp = ""
-
+            local_started = False  # ← keeps English frozen once [LOCAL] arrives
+            
             try:
                 with client.messages.stream(
-                    model="claude-sonnet-4-5",
+                    model="claude-sonnet-4-6",  # ← correct model
                     max_tokens=8192,
                     messages=[{"role": "user", "content": prompt}]
                 ) as stream:
                     for text in stream.text_stream:
                         full_resp += text
-                        if "[LOCAL]" in full_resp:
-                            parts = full_resp.split("[LOCAL]")
-                            e_text = parts[0].replace("[ENGLISH]", "").strip()
-                            l_text = parts[1].strip()
-                            e_placeholder.markdown(e_text)
-                            l_placeholder.markdown(l_text + " ▌")
+                        if not local_started and "[LOCAL]" in full_resp:
+                            local_started = True
+                            parts = full_resp.split("[LOCAL]", 1)
+                            e_placeholder.markdown(parts[0].replace("[ENGLISH]", "").strip())
+                            l_placeholder.markdown(parts[1].strip() + " ▌")
+                        elif local_started:
+                            l_placeholder.markdown(full_resp.split("[LOCAL]", 1)[1].strip() + " ▌")
                         else:
                             e_placeholder.markdown(full_resp.replace("[ENGLISH]", "").strip() + " ▌")
-
+            
+                # ← cursor cleanup
+                if local_started:
+                    parts = full_resp.split("[LOCAL]", 1)
+                    e_placeholder.markdown(parts[0].replace("[ENGLISH]", "").strip())
+                    l_placeholder.markdown(parts[1].strip())
+                else:
+                    e_placeholder.markdown(full_resp.replace("[ENGLISH]", "").strip())
+            
                 st.session_state['last_story_output'] = full_resp
                 st.balloons()
-
+            
             except Exception as e:
                 st.error(f"Story generation failed: {e}")
-
 else:
     st.info("👈 Select a data source in the sidebar to begin.")
 
