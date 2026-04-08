@@ -404,7 +404,7 @@ if st.session_state['data_mapped'] is not None:
                     parts = block.split("[LOCAL]")
                     e_text = parts[0].replace("[ENGLISH]", "").strip()
                     l_text = parts[1].strip()
-                    row_e, row_l = st.columns(2)]
+                    row_e, row_l = st.columns(2)
                     row_e.markdown(e_text)
                     row_l.markdown(l_text)
                     time.sleep(0.4)
