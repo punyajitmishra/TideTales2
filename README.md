@@ -52,7 +52,7 @@ TideTales/
 
 ### 1. Clone & Install
 ```bash
-git clone https://github.com/punyajitmishra/TideTales.git
+git clone https://github.com/punyajitmishra/TideTales2.git
 cd TideTales
 npm run install:all
 ```
